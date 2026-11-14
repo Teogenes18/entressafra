@@ -1,0 +1,14 @@
+{
+  "_note": "PROVISIONAL values on a 1-5 scale, drafted from general agronomic knowledge. Every row must be checked against a source (for example Embrapa publications) and edited by an agronomist before real use.",
+  "crops": [
+    { "id": "maize", "name_en": "Maize", "name_pt": "Milho", "family": "Poaceae", "cycle_days": 110, "water_need": 4, "drought_tolerance": 2, "n_fixing": false, "soil_cover": 3, "forage": 3, "income": 3, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "sorghum", "name_en": "Sorghum", "name_pt": "Sorgo", "family": "Poaceae", "cycle_days": 110, "water_need": 2, "drought_tolerance": 4, "n_fixing": false, "soil_cover": 3, "forage": 4, "income": 2, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "pearl-millet", "name_en": "Pearl millet", "name_pt": "Milheto", "family": "Poaceae", "cycle_days": 80, "water_need": 1, "drought_tolerance": 5, "n_fixing": false, "soil_cover": 4, "forage": 4, "income": 2, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "cowpea", "name_en": "Cowpea", "name_pt": "Feijão-caupi", "family": "Fabaceae", "cycle_days": 75, "water_need": 2, "drought_tolerance": 4, "n_fixing": true, "soil_cover": 3, "forage": 3, "income": 3, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "common-bean", "name_en": "Common bean", "name_pt": "Feijão comum", "family": "Fabaceae", "cycle_days": 85, "water_need": 3, "drought_tolerance": 2, "n_fixing": true, "soil_cover": 2, "forage": 1, "income": 3, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "pigeon-pea", "name_en": "Pigeon pea", "name_pt": "Guandu", "family": "Fabaceae", "cycle_days": 150, "water_need": 2, "drought_tolerance": 5, "n_fixing": true, "soil_cover": 4, "forage": 4, "income": 2, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "cassava", "name_en": "Cassava", "name_pt": "Mandioca", "family": "Euphorbiaceae", "cycle_days": 365, "water_need": 1, "drought_tolerance": 5, "n_fixing": false, "soil_cover": 3, "forage": 2, "income": 3, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "forage-cactus", "name_en": "Forage cactus", "name_pt": "Palma forrageira", "family": "Cactaceae", "cycle_days": 365, "water_need": 1, "drought_tolerance": 5, "n_fixing": false, "soil_cover": 3, "forage": 5, "income": 2, "status": "provisional", "source": "TO CONFIRM" },
+    { "id": "sunn-hemp", "name_en": "Sunn hemp (cover crop)", "name_pt": "Crotalária", "family": "Fabaceae", "cycle_days": 90, "water_need": 2, "drought_tolerance": 4, "n_fixing": true, "soil_cover": 5, "forage": 1, "income": 1, "status": "provisional", "source": "TO CONFIRM" }
+  ]
+}

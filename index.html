@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entressafra: crop-rotation planner for the fields between harvests</title>
+  <meta name="description" content="Compare crop-rotation strategies for the period between harvests using NASA POWER rainfall and temperature data. NASA Space Apps 2026, Field Shift.">
+  <meta property="og:title" content="Entressafra: plan the pause, protect the soil">
+  <meta property="og:description" content="A crop-rotation planner built on NASA POWER data. NASA Space Apps 2026, Field Shift.">
+  <meta name="theme-color" content="#14201A">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314201A'/%3E%3Cpath d='M8 22h16' stroke='%23E3A63B' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M16 21c0-6 3-9 7-10-1 5-3 8-7 10zm0 0c0-4-2-7-6-8 0 4 2 7 6 8z' fill='%23F3EEE2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Compact header: name, one-line pitch, the instant example and the language switch. -->
+  <header class="topbar">
+    <div class="wrap topbar-row">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#F3EEE2" fill-opacity=".08"/>
+          <path d="M8 22h16" stroke="#E3A63B" stroke-width="3" stroke-linecap="round"/>
+          <path d="M16 21c0-6 3-9 7-10-1 5-3 8-7 10zm0 0c0-4-2-7-6-8 0 4 2 7 6 8z" fill="#F3EEE2"/>
+        </svg>
+        <div>
+          <h1>Entressafra</h1>
+          <p class="tagline" data-i18n="brand.tagline"></p>
+        </div>
+      </div>
+      <p class="event">NASA Space Apps 2026 · Field Shift</p>
+      <div class="lang" role="group" aria-label="Language / Idioma">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+      </div>
+    </div>
+    <div class="wrap pitch-row">
+      <p class="lead" data-i18n="brand.lead"></p>
+      <div class="pitch-action">
+        <button id="example" type="button" class="btn-accent" data-i18n="brand.example"></button>
+        <span class="pitch-hint" data-i18n="brand.exampleHint"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Two columns on wide screens: controls on the left (they stay in view), results on the right. -->
+  <main class="wrap layout">
+    <aside class="controls">
+      <form class="steps" onsubmit="return false">
+        <section class="panel">
+          <h2 data-i18n="step1.title"></h2>
+          <p class="hint" data-i18n="step1.hint"></p>
+          <div class="map-wrap">
+            <div id="map" data-i18n-aria="step1.mapLabel"></div>
+            <p id="map-hint" class="map-hint" data-i18n="step1.wheel" hidden></p>
+          </div>
+          <div class="row">
+            <label><span data-i18n="step1.lat"></span><input id="lat" type="number" step="0.01" min="-90" max="90" inputmode="decimal"></label>
+            <label><span data-i18n="step1.lon"></span><input id="lon" type="number" step="0.01" min="-180" max="180" inputmode="decimal"></label>
+            <button id="locate" type="button" class="btn-ghost" data-i18n="step1.locate"></button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 data-i18n="step2.title"></h2>
+          <label class="full"><span data-i18n="step2.crop"></span><select id="current"></select></label>
+          <div class="row">
+            <label><span data-i18n="step2.from"></span><select id="startMonth"></select></label>
+            <label><span data-i18n="step2.to"></span><select id="endMonth"></select></label>
+          </div>
+          <details class="disclosure">
+            <summary data-i18n="step2.more"></summary>
+            <label><span data-i18n="step2.years"></span><input id="years" type="number" min="5" max="30" inputmode="numeric"></label>
+            <p class="hint" data-i18n="step2.hint"></p>
+          </details>
+        </section>
+
+        <section class="panel">
+          <h2 data-i18n="step3.title"></h2>
+          <p class="hint" data-i18n="step3.hint"></p>
+          <div id="weights" class="weights"></div>
+          <button id="run" type="button" class="btn-primary" data-i18n="step3.run"></button>
+        </section>
+      </form>
+    </aside>
+
+    <div class="output">
+      <p id="status" role="status" aria-live="polite"></p>
+
+      <!-- Shown on wide screens until the first comparison. -->
+      <section id="intro" class="panel intro">
+        <h2 data-i18n="intro.title"></h2>
+        <ol class="intro-steps">
+          <li><strong data-i18n="intro.s1.title"></strong><span data-i18n="intro.s1.text"></span></li>
+          <li><strong data-i18n="intro.s2.title"></strong><span data-i18n="intro.s2.text"></span></li>
+          <li><strong data-i18n="intro.s3.title"></strong><span data-i18n="intro.s3.text"></span></li>
+        </ol>
+        <p class="hint" data-i18n="intro.data"></p>
+      </section>
+
+      <div id="results" hidden>
+        <section id="verdict" class="verdict" aria-live="polite"></section>
+
+        <section class="block">
+          <h2 data-i18n="results.title"></h2>
+          <p class="hint" data-i18n="results.legend"></p>
+          <ul id="priority-legend" class="legend"></ul>
+          <div id="cards" class="cards"></div>
+          <div id="common" class="panel common"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="climate.title"></h2>
+            <span id="risk-badge" class="risk-badge"></span>
+          </div>
+          <p id="source" class="hint"></p>
+          <div id="tiles" class="tiles"></div>
+
+          <h3 data-i18n="chart.years.title"></h3>
+          <p class="hint" data-i18n="chart.years.sub"></p>
+          <div id="chart-years" class="chart"></div>
+
+          <details class="disclosure more">
+            <summary data-i18n="climate.more"></summary>
+            <div id="tiles-more" class="tiles"></div>
+            <div id="risk" class="risk"></div>
+            <h3 data-i18n="chart.months.title"></h3>
+            <p class="hint" data-i18n="chart.months.sub"></p>
+            <div id="chart-months" class="chart"></div>
+          </details>
+        </section>
+
+        <details class="panel method">
+          <summary data-i18n="method.title"></summary>
+          <p data-i18n="method.p1"></p>
+          <p data-i18n="method.p2"></p>
+          <p data-i18n="method.p3"></p>
+        </details>
+      </div>
+    </div>
+  </main>
+
+  <footer class="wrap">
+    <p class="notice" data-i18n="brand.notice"></p>
+    <p data-i18n="footer.data"></p>
+    <p data-i18n="footer.team"></p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
