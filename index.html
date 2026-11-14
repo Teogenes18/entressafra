@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
   <!-- Compact header: name, one-line pitch and the language switch. -->
@@ -136,16 +136,18 @@
           <p data-i18n="method.p3"></p>
         </details>
       </div>
+
+      <!-- Inside the results column, so on desktop it never sits under the controls. -->
+      <footer>
+        <p class="notice" data-i18n="brand.notice"></p>
+        <p data-i18n="footer.data"></p>
+        <p data-i18n="footer.team"></p>
+      </footer>
     </div>
   </main>
 
-  <footer class="wrap">
-    <p class="notice" data-i18n="brand.notice"></p>
-    <p data-i18n="footer.data"></p>
-    <p data-i18n="footer.team"></p>
-  </footer>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <!-- ?v= forces browsers to fetch the new file after an update. Raise it on every release. -->
+  <script type="module" src="js/app.js?v=4"></script>
 </body>
 </html>

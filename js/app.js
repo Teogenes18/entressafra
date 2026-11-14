@@ -248,6 +248,8 @@ function switchLang(lang) {
 // ---------------------------------------------------------------- start
 
 async function init() {
+  // The language switch is wired first, so it works even if something later fails to load.
+  for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => switchLang(b.dataset.lang));
   switchLang(initialLang());
   try {
     const res = await fetch('data/crops.json');
@@ -264,7 +266,6 @@ async function init() {
 
   $('run').addEventListener('click', () => compare());
   $('locate').addEventListener('click', locate);
-  for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => switchLang(b.dataset.lang));
   for (const id of ['current', 'startMonth', 'endMonth']) $(id).addEventListener('change', onQuickChange);
   $('weights').addEventListener('input', onQuickChange); // live re-ranking while a slider moves
   for (const id of ['lat', 'lon']) {
