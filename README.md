@@ -5,19 +5,18 @@
 Entressafra (Portuguese for the interval between one harvest and the next planting) is a decision-support web tool that helps farmers compare crop-rotation strategies using NASA Earth observation data. It was built for the **NASA Space Apps Challenge 2026, challenge "Field Shift"**, which asks teams to help farms adapt using NASA data. Our answer focuses on one decision that farmers in the Brazilian semi-arid make every year: what to plant after the harvest, when the rain is short and unpredictable.
 
 - **Live demo:** https://teogenes18.github.io/entressafra/
-- **Worked example, opens in seconds:** https://teogenes18.github.io/entressafra/?example=cedro
 - **Demo slides:** **[add the public link here]**
 
 | Desktop: controls stay on the left, results update on the right | Phone (Portuguese) |
 |---|---|
-| ![Entressafra on a desktop screen, Cedro example](docs/screenshots/desktop.png) | ![Entressafra on a phone, in Portuguese](docs/screenshots/phone.png) |
+| ![Entressafra on a desktop screen, Cedro, Ceará](docs/screenshots/desktop.png) | ![Entressafra on a phone, in Portuguese](docs/screenshots/phone.png) |
 
 ## Try it in 60 seconds
 
-1. Open the live demo and press **"See an example: Cedro, Ceará"**. It loads 20 rainy seasons of saved NASA POWER data for Cedro, in the Brazilian semi-arid.
+1. Open the live demo and press **"Compare rotation strategies"**. The map starts at Cedro, Ceará, in the Brazilian semi-arid, and the tool fetches 20 rainy seasons of NASA POWER data for that point.
 2. Read the one-line verdict, then the climate panel: in the same field, the wettest season had **about 3 times** the rain of the driest.
 3. Move the **"What matters most?"** sliders. The ranking updates instantly, and each card shows exactly how many points each priority added.
-4. Click anywhere else on the map and press **Compare**: the tool fetches live NASA POWER data for that point.
+4. Click anywhere else on the map and press **Compare** again: the tool fetches NASA POWER data for the new point.
 5. Switch **EN / PT** at the top: the tool speaks Portuguese for the farmers it was built for.
 
 ## The problem
@@ -57,7 +56,7 @@ The code uses **one** NASA data source:
 |---|---|---|---|
 | **NASA POWER** (Prediction Of Worldwide Energy Resources), Daily API, point query, Agroclimatology (AG) community | `PRECTOTCORR` (precipitation corrected, mm/day) and `T2M_MAX` (maximum air temperature at 2 m, °C) | Season rainfall, year-to-year variation, dry spells, hot days, monthly rainfall, entressafra window | [Project](https://power.larc.nasa.gov/) · [Daily API docs](https://power.larc.nasa.gov/docs/services/api/temporal/daily/) |
 
-The tool works for **any point on Earth**: when the user presses "Compare", it queries the NASA POWER API live for that point (no API key needed). One NASA POWER response, for Cedro, Ceará (1996-2025), is also saved unchanged in [data/nasa-power-cedro-1996-2025.json](data/nasa-power-cedro-1996-2025.json). It is used only by the "See an example" button and as a fallback near Cedro if the API does not answer. The page always says which source it used. Details: [docs/data-sources.md](docs/data-sources.md).
+The tool works for **any point on Earth**: when the user presses "Compare", it queries the NASA POWER API live for that point (no API key needed). One NASA POWER response, for Cedro, Ceará (1996-2025), is also saved unchanged in [data/nasa-power-cedro-1996-2025.json](data/nasa-power-cedro-1996-2025.json). It is used only as a fallback near Cedro, if the API does not answer. The page always says which source it used. Details: [docs/data-sources.md](docs/data-sources.md).
 
 No other NASA dataset is used in this version (SMAP, GPM, MODIS and Landsat are listed under "Next steps" only).
 

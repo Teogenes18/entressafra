@@ -77,29 +77,24 @@ function buildControls() {
 
 // ---------------------------------------------------------------- data + analysis
 
-async function loadData(form, { preferSnapshot = false } = {}) {
-  const useSnapshot = async () => {
+/**
+ * Fetches NASA POWER data live. If the API fails near Cedro, falls back to the saved
+ * NASA POWER response for Cedro, so a demo there never depends on the API being up.
+ */
+async function loadData(form) {
+  setStatus(t('status.fetching'), 'busy');
+  let fallbackReason = null;
+  try {
+    state.series = await fetchDaily(form);
+    state.source = { kind: 'live', lat: form.lat, lon: form.lon };
+  } catch (err) {
+    if (!isNearSnapshot(form.lat, form.lon)) throw err;
     state.series = await loadSnapshot({ startYear: form.startYear, endYear: Math.min(form.endYear, SNAPSHOT.endYear) });
     state.source = { kind: 'snapshot', name: SNAPSHOT.name, lat: SNAPSHOT.lat, lon: SNAPSHOT.lon };
-  };
-
-  if (preferSnapshot) {
-    setStatus(t('status.snapshot'), 'busy');
-    await useSnapshot();
-  } else {
-    setStatus(t('status.fetching'), 'busy');
-    try {
-      state.series = await fetchDaily(form);
-      state.source = { kind: 'live', lat: form.lat, lon: form.lon };
-    } catch (err) {
-      if (!isNearSnapshot(form.lat, form.lon)) throw err;
-      await useSnapshot();
-      state.dataKey = dataKeyOf(form);
-      return { fallbackReason: err.message };
-    }
+    fallbackReason = err.message;
   }
   state.dataKey = dataKeyOf(form);
-  return {};
+  return { fallbackReason };
 }
 
 /** Runs the whole analysis on the data in memory and draws it. Returns false if the data is too thin. */
@@ -148,16 +143,13 @@ function doneMessage() {
   return t('status.done', { years: years.length, from: years[0].year, to: years[years.length - 1].year });
 }
 
-async function compare({ preferSnapshot = false } = {}) {
+async function compare() {
   const form = readForm();
   if (!validCoords(form)) return setStatus(t('status.badCoords'), 'error');
   $('run').disabled = true;
-  $('example').disabled = true;
   try {
     let fallbackReason = null;
-    if (preferSnapshot || dataKeyOf(form) !== state.dataKey) {
-      ({ fallbackReason } = await loadData(form, { preferSnapshot }));
-    }
+    if (dataKeyOf(form) !== state.dataKey) ({ fallbackReason } = await loadData(form));
     if (!analyse(form)) return;
     setStatus(fallbackReason ? t('status.fallback', { reason: fallbackReason }) : doneMessage(), fallbackReason ? 'warn' : 'ok');
     revealResults();
@@ -165,18 +157,7 @@ async function compare({ preferSnapshot = false } = {}) {
     setStatus(`${t('status.error', { reason: err.message })} ${t('status.errorHint')}`, 'error');
   } finally {
     $('run').disabled = false;
-    $('example').disabled = false;
   }
-}
-
-/** Instant demo: Cedro, maize, February-May, 20 years, from the saved NASA response. */
-function showExample() {
-  setPoint(SNAPSHOT.lat, SNAPSHOT.lon);
-  $('current').value = DEFAULTS.crop;
-  $('startMonth').value = String(DEFAULTS.startMonth);
-  $('endMonth').value = String(DEFAULTS.endMonth);
-  $('years').value = String(DEFAULTS.years);
-  return compare({ preferSnapshot: true });
 }
 
 /** Crop, season or priority changed: re-rank at once using the data already loaded. */
@@ -282,7 +263,6 @@ async function init() {
   initMap();
 
   $('run').addEventListener('click', () => compare());
-  $('example').addEventListener('click', showExample);
   $('locate').addEventListener('click', locate);
   for (const b of document.querySelectorAll('[data-lang]')) b.addEventListener('click', () => switchLang(b.dataset.lang));
   for (const id of ['current', 'startMonth', 'endMonth']) $(id).addEventListener('change', onQuickChange);
@@ -301,9 +281,6 @@ async function init() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => state.result && renderCharts(state.result), 200);
   });
-
-  // A shareable link that opens straight on the worked example: ?example=cedro
-  if (new URLSearchParams(location.search).has('example')) showExample();
 }
 
 init();

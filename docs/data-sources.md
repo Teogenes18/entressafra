@@ -21,10 +21,7 @@ https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR,T2M_
 
 `data/nasa-power-cedro-1996-2025.json` is the response to the request above, saved unchanged on 2026-11-14 (POWER API v2.10.3; sources MERRA-2 and POWER). It has 10,958 days and no missing values.
 
-It is used in two cases:
-
-1. The **"See an example: Cedro, Ceará"** button, so the demo opens in seconds.
-2. As a **fallback** when the live API does not answer and the chosen point is within 0.25° of Cedro.
+It is used only as a **fallback**: when the live API does not answer and the chosen point is within 0.25° of Cedro, the app uses this saved response instead.
 
 The page always says which source it used. The API response time varied from about 2 s to 17 s while the tool was being built, which is why the fallback exists.
 
