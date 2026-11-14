@@ -209,17 +209,21 @@ function initMap() {
   }, { passive: true });
 }
 
+// Each browser error code gets a message that says what went wrong and how to fix it.
+const LOCATION_ERRORS = { 1: 'status.locDenied', 2: 'status.locUnavailable', 3: 'status.locTimeout' };
+
 function locate() {
   if (!navigator.geolocation) return setStatus(t('status.noLocation'), 'error');
+  if (!window.isSecureContext) return setStatus(t('status.locInsecure'), 'error'); // e.g. http:// on a local network IP
   setStatus(t('status.locating'), 'busy');
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       setPoint(pos.coords.latitude, pos.coords.longitude);
       if (map) map.setZoom(10);
-      setStatus('');
+      setStatus(t('status.located', { lat: pos.coords.latitude.toFixed(2), lon: pos.coords.longitude.toFixed(2) }), 'ok');
     },
-    () => setStatus(t('status.noLocation'), 'error'),
-    { timeout: 15000 },
+    (err) => setStatus(t(LOCATION_ERRORS[err.code] || 'status.noLocation'), 'error'),
+    { timeout: 20000, maximumAge: 10 * 60 * 1000 }, // a position up to 10 minutes old is fine for a field
   );
 }
 
