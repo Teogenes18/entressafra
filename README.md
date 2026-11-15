@@ -118,14 +118,11 @@ Any static server also works, for example `python -m http.server 8000`. On Windo
 
 ## Use of AI
 
-**[Team: check every line of this section, complete the bracketed parts and delete this note before submitting.]**
-
 We used **Claude** (Anthropic), through the Claude Code coding assistant, during development.
 
-- **What the AI did:** it wrote most of the JavaScript, CSS and HTML, the unit tests and the documentation in this repository, following the team's instructions. It also checked the rainfall figures in this README against the NASA POWER data, and found that some numbers in an earlier draft of our slides did not match the data.
-- **What the team did:** [describe it honestly, for example: chose the challenge and the problem, defined the idea and the features, chose the crops and the region, tested the app, reviewed the code and the texts, made the slides].
-- **Crop table:** [say who drafted the values in data/crops.json, a person or the AI. In both cases they are provisional and not validated yet].
-- **What the AI did not do:** it did not create data. Every climate number comes from NASA POWER, either live from the API or from the saved API response in `data/`.
+- **What the AI did:** it wrote most of the code, tests and documentation in this repository, following the team's instructions. It also checked the rainfall figures in this README against the NASA POWER data.
+- **What the team did:** chose the challenge and the problem, made the design decisions, and tested the tool on computers and phones, reporting the issues that were then fixed.
+- **What the AI did not do:** it did not create data. Every climate number comes from NASA POWER, either live from the API or from the saved API response in `data/`. The crop table in `data/crops.json` is provisional and has not yet been validated by agronomists.
 
 ## Team
 
