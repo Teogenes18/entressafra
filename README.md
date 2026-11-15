@@ -5,7 +5,7 @@
 Entressafra (Portuguese for the interval between one harvest and the next planting) is a decision-support web tool that helps farmers compare crop-rotation strategies using NASA Earth observation data. It was built for the **NASA Space Apps Challenge 2026, challenge "Field Shift"**, which asks teams to help farms adapt using NASA data. Our answer focuses on one decision that farmers in the Brazilian semi-arid make every year: what to plant after the harvest, when the rain is short and unpredictable.
 
 - **Live demo:** https://teogenes18.github.io/entressafra/
-- **Demo slides:** **[add the public link here]**
+- **Demo slides:** https://drive.google.com/file/d/1mSYfEpZIgotjDai_OQLuGcmQScG4rwiC/view?usp=sharing
 
 | Desktop: controls stay on the left, results update on the right | Phone (Portuguese) |
 |---|---|
@@ -128,9 +128,9 @@ We used **Claude** (Anthropic), through the Claude Code coding assistant, during
 
 Team Big Three, IFCE Campus Cedro, Ceará, Brazil.
 
-- **[TEOGENES ANTONIO CORDEIRO BISNETO]**:
-- **[CAIQUE DE SOUZA OLIVEIRA]**: 
-- **[JOSE CARLOS PINHEIRO RAMALHO]**: 
+- TEOGENES ANTONIO CORDEIRO BISNETO
+- CAIQUE DE SOUZA OLIVEIRA
+- JOSE CARLOS PINHEIRO RAMALHO
 
 ## License
 
